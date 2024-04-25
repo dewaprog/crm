@@ -1,5 +1,6 @@
 <?= $this->extend('layout/template'); ?>
 
+<!-- <?= d($company); ?> -->
 <?= $this->section('headlink'); ?>
 <script src="https://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
 <script src="js/bootstrap-tagsinput.min.js"></script>
@@ -11,9 +12,20 @@
 ?>
 <div class="container-fluid pb-3">
     <div class="d-grid gap-3" style="grid-template-columns: 1fr 1fr;">
+
         <div class="bg-light border rounded-1">
-            <a href="#addCompany" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Company</span></a>
-            <br><br><br><br><br><br><br><br><br><br>
+            <select name='company' id='company'>
+                <?php
+                if (isset($company))
+                    foreach ($company as $r) { ?>
+                    <option value="<?= $r['company_id'] ?>"><?= $r['company_name']; ?></option>
+                <?php } ?>
+            </select>
+            <br>
+            <br>
+            <br>
+            <a href="#addCompany" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Project</span></a>
+            <br><br><br><br><br><br><br><br><br>
         </div>
         <div class="bg-light border rounded-3">
             <br><br><br><br><br><br><br><br><br><br>
@@ -33,6 +45,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Project Name</label>
+                        <input id='company_id' name='company_id' type="hidden" class="form-control">
                         <input id='project_name' name='project_name' type="text" class="form-control" required>
                     </div>
 
@@ -40,20 +53,20 @@
                         <label>Default view :</label>
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
+                            <input class="form-check-input" type="radio" name="default_view" value="1" id="rd_list">
+                            <label class="form-check-label" for="rd_list">
                                 LIST
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                            <label class="form-check-label" for="flexRadioDefault2">
+                            <input class="form-check-input" type="radio" name="default_view" id="rd_board" value="2" checked>
+                            <label class="form-check-label" for="rd_board">
                                 BOARD
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" checked>
-                            <label class="form-check-label" for="flexRadioDefault3">
+                            <input class="form-check-input" type="radio" name="default_view" id="rd_calender" value="3" checked>
+                            <label class="form-check-label" for="rd_calender">
                                 CALENDER
                             </label>
                         </div>
@@ -62,7 +75,7 @@
                     <div class="form-group">
                         <label>is Approval :</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="is_approval" id="is_approval">
+                            <input class="form-check-input" type="checkbox" name="is_approval" id="is_approval" value="1">
                             <label class="form-check-label" for="is_approval">
                                 Yes
                             </label>
@@ -70,7 +83,7 @@
                     </div>
                     <div class="form-group hide" id='div-approval'>
                         <label>Approval by :</label>
-                        <input type="text" name='approveal_by' id="approval_by" class="form-control" />
+                        <input type="text" name='approval_by' id="approval_by" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label>Member :</label>
@@ -89,6 +102,10 @@
 
 <script>
     $(document).ready(function() {
+        $("#company_id").val($("#company").val());
+        $("#company").on('change', function() {
+            $("#company_id").val($(this).val());
+        });
         if ($("#project_name").val() == "") $("#btn-save").addClass('disabled');
         else $("#btn-save").removeClass('disabled');
 
